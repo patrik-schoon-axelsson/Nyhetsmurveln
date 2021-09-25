@@ -45,7 +45,7 @@ def refresh_token():
     identity = get_jwt_identity()
     refreshed_token = create_access_token(identity=identity)
 
-    return jsonify(access_token=refresh_token)
+    return jsonify(access_token=refreshed_token)
 
 @app.route("/api/login", methods=["POST"])
 def login():
@@ -61,7 +61,7 @@ def login():
             return jsonify(token=access_token, refreshToken=refresh_token, user=user.to_json())
         else:
             return jsonify({
-                "status": 403,
+                "status": 401,
                 "message": "Either the password or the email was incorrect"
             })
     except KeyError:
@@ -101,25 +101,36 @@ def api_parser():
 @jwt_required(optional=True)
 def feeds_single(doc_id):
     try:
-        feed = Feed.objects.get_or_404(id=doc_id)
+        feed = Feed.objects.get(id=doc_id)
     except ValidationError as e:
         return jsonify({
             "status": 404,
             "message": f"Invalid query. This endpoint only accepts valid MongoDB ObjectID strings. {e} is not an acceptable query-string.."
         })
     user = get_jwt_identity()
+    admin_status = json.loads(User.objects.get(id=user["_id"]["$oid"]).to_json())["isAdmin"]
 
     if request.method == "PUT":
-        if user:
-            return "Something!"
+        if user and admin_status:
+            feed.update(title=request.json["title"] , url=request.json["url"], description=request.json["description"], added_by=User.objects.get_or_404(id=user["_id"]["$oid"]))
+            
+            return jsonify({
+                "status": 200,
+                "message": f"Updated object with id: {doc_id}"
+            })
         else:
             return jsonify({
                 "status": 401,
                 "message": "You need to login to perform a PUT request on this endpoint."
             })
     elif request.method == "DELETE":
-                if user:        
-                    return "Something else!"
+                if user and admin_status:
+                    feed.delete()
+
+                    return jsonify({
+                        "status": 200,
+                        "message": f"Deleted item with id: {doc_id} succesfully."
+                    })
                 else:
                     return jsonify({
                         "status": 401,
