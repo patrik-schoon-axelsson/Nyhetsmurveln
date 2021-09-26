@@ -71,17 +71,19 @@ def login():
         })
 
 # Route for handling account changes, by authenticated users.
-@app.route("/api/users/<user_id>", methods=["PUT", "POST"])
+@app.route("/api/users", methods=["PUT", "POST"])
 @jwt_required()
 def user_update():
     # PUT handles updates to password and subscriptions, POST handles adding and removing subscriptions.
+    user = json.loads(get_jwt_identity())
+    db_user = User.objects.get(id=user["_id"]["$oid"])
 
     if request.method == "PUT":
         return "Updates"
     elif request.method == "POST":
         return "Added subscription!"
 
-# The Feedparser API. Accepts JSON posts with the url key being the URL of
+# The Feedparser API. Accepts object ID strings, URL taken from the database of
 # a valid RSS or Atom feed, with error handling for invalid URLs, faulty JSON content
 # etc.
 
