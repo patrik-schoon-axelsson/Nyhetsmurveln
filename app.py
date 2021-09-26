@@ -70,14 +70,29 @@ def login():
             "message": "Request not accepted. This endpoint accepts JSON with the keys password and username."
         })
 
+# Route for handling account changes, by authenticated users.
+@app.route("/api/users/<user_id>", methods=["PUT", "POST"])
+@jwt_required()
+def user_update():
+    # PUT handles updates to password and subscriptions, POST handles adding and removing subscriptions.
+
+    if request.method == "PUT":
+        return "Updates"
+    elif request.method == "POST":
+        return "Added subscription!"
+
 # The Feedparser API. Accepts JSON posts with the url key being the URL of
 # a valid RSS or Atom feed, with error handling for invalid URLs, faulty JSON content
 # etc.
 
-@app.route("/api/parser", methods=['POST'])
-def api_parser():
+@app.route("/api/parser/<feed_id>", methods=['POST'])
+def api_parser(feed_id):
+    # Obviously we do not want the feedparser endpoint exposed to accept "pure"
+    # URL-values, or we'll end up DDOSing half the RSS feeds on the planet.
+    # Instead, we accept document-IDs as a URL parameter and get the URL from Mongo.
+
     try:
-        url = request.json["url"]
+        url = json.loads(Feed.objects.get_or_404(id=feed_id).to_json())["url"]
         feed = feedparser.parse(url)
         if len(feed.entries) > 0:
             return jsonify({
