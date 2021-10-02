@@ -8,7 +8,10 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "material-design-icons": "^3.0.1",
+    "materialize-css": "^1.0.0-rc.2",
     "vue": "^3.0.0",
+    "vue-axios": "^3.3.7",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
   },

@@ -32,7 +32,6 @@ app.config['MONGODB_SETTINGS'] = {
 db = MongoEngine(app)
 
 @app.route("/api/register", methods=['POST'])
-@jwt_required(refresh=True)
 def register():
     hashed_pw = generate_password_hash(password=request.json["password"])
     user = User(email=request.json["email"], password=hashed_pw )
@@ -41,11 +40,12 @@ def register():
     return jsonify(user)    
 
 @app.route("/api/refreshtoken", methods=["POST"])
+@jwt_required(refresh=True)
 def refresh_token():
     identity = get_jwt_identity()
     refreshed_token = create_access_token(identity=identity)
 
-    return jsonify(access_token=refreshed_token)
+    return jsonify(token=refreshed_token, user=identity)
 
 @app.route("/api/login", methods=["POST"])
 def login():
@@ -63,12 +63,12 @@ def login():
             return jsonify({
                 "status": 401,
                 "message": "Either the password or the email was incorrect"
-            })
+            }), 401
     except KeyError:
         return jsonify({
             "status": 403,
             "message": "Request not accepted. This endpoint accepts JSON with the keys password and username."
-        })
+        }), 403
 
 # Route for handling account changes, by authenticated users.
 @app.route("/api/users", methods=["PUT", "POST"])
@@ -107,12 +107,12 @@ def api_parser(feed_id):
             return jsonify({
                 "status": 403,
                 "message": "Invalid URL. Could not parse. Make sure the URL is a valid RSS or Atom feed."
-            })
+            }), 403
     except KeyError:
             return jsonify({ 
                 "status": 404,
                 "message": "Request lacks the url key. This endpoint accepts only JSON with a key labelled url."
-                })
+                }), 404
 
 @app.route("/api/feeds/<doc_id>", methods=["GET", "PUT", "DELETE"])
 @jwt_required(optional=True)
@@ -123,9 +123,11 @@ def feeds_single(doc_id):
         return jsonify({
             "status": 404,
             "message": f"Invalid query. This endpoint only accepts valid MongoDB ObjectID strings. {e} is not an acceptable query-string.."
-        })
+        }), 404
     user = get_jwt_identity()
-    admin_status = json.loads(User.objects.get(id=user["_id"]["$oid"]).to_json())["isAdmin"]
+    # Sets a admin-status variable only if there is a jwt identity, to avoid typeerror cases.
+    if user:
+        admin_status = json.loads(User.objects.get(id=user["_id"]["$oid"]).to_json())["isAdmin"]
 
     if request.method == "PUT":
         if user and admin_status:
@@ -219,4 +221,4 @@ def index():
     return jsonify({"status": 200, "msg": "Hello world! This is where the frontend static will be served!"})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
