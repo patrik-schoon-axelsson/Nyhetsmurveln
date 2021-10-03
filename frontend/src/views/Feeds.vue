@@ -5,7 +5,7 @@
  <div v-else class="row"> 
      <h1 v-if="error">{{error}}</h1>
      <hr>
-    <div class="col s12 m7" v-if="feed">
+    <div class="col s12 m7 offset-m3" v-if="feed">
     <div class="card medium">
       <div class="card-stacked">
         <div class="card-content">
