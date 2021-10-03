@@ -12,8 +12,10 @@ import feedparser
 
 load_dotenv()
 
-app = Flask(__name__)
-
+app = Flask(__name__, 
+            static_folder='frontend/dist/', 
+            static_url_path="/")
+            
 app.config["JWT_SECRET_KEY"] = os.environ["FLASK_SECRET_KEY"]
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = datetime.timedelta(hours=1)
 app.config["JWT_REFRESH_TOKEN_EXPIRES"] = datetime.timedelta(days=30)
@@ -216,9 +218,13 @@ def feeds_all():
     elif request.method == "GET":
         return Feed.objects.all().to_json()
 
-@app.route("/")
-def index():
-    return jsonify({"status": 200, "msg": "Hello world! This is where the frontend static will be served!"})
+
+# Catch-All route for serving the static site.
+  
+@app.route("/", defaults={'path': ''})
+@app.route("/<path:path>")
+def index(path):
+    return app.send_static_file("index.html")
 
 if __name__ == "__main__":
     app.run()
