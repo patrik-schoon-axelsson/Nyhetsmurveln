@@ -1,6 +1,6 @@
 module.exports = {
     devServer: {
-      outputDir: './../dist',
+      clientLogLevel: 'info',
       publicPath: '/',
       proxy: {
         '^/api': {

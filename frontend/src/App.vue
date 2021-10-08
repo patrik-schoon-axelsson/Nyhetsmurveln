@@ -3,15 +3,10 @@
     <h1 class="center-align">LADDAR NYHETER...</h1>
   </div>
   <div id="main-app" v-else>
-    <NavBar />
+    <NavBar/>
     <div class="container">
       <div class="row">
-        <ul class="tabs" id="tabs" v-if="feeds">
-          <li class="tab col s3" v-for="feed in feeds" :key="feed._id.$oid">
-            <router-link :to="{ name : 'Feeds', params : { id: feed._id.$oid }}">{{feed.title}}</router-link>
-          </li> 
-        </ul>  
-        <router-view :key="this.$route.params.id" />
+        <router-view :key="this.$route.params.id"></router-view>
       </div>
     </div>
   </div>
@@ -20,7 +15,6 @@
 <script>
 import axios from 'axios';
 import M from 'materialize-css';
-import './components/Nav/NavBar.vue'
 import store from './store'
 import NavBar from './components/Nav/NavBar.vue'
 
