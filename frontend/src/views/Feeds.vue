@@ -6,10 +6,10 @@
      <h1 v-if="error">{{error}}</h1>
      <hr>
     <div class="col s12 m7 offset-m3" v-if="feed">
-    <div class="card medium">
+    <div class="card small">
       <div class="card-stacked">
         <div class="card-content">
-        <h4 class="header">{{feed.title}}</h4>
+        <h4 class="header headline">{{feed.title}}</h4>
           <p class="flow-text">{{feed.subtitle}}</p>
           <hr>
           <p>{{feed.rights}}</p>

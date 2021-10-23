@@ -1,5 +1,5 @@
 <template>
-  <div class="col s12 m4 l3">
+  <div class="col s12 m6 l4">
       <div class="card blue-grey darken-1">
         <div class="card-content white-text">
           <span class="card-title">{{entry.title}}</span>
@@ -19,6 +19,12 @@ export default {
 </script>
 
 <style>
+.card-title {
+  font-size: 1.1rem;
+}
+p {
+  font-size: .8rem;
+}
 
 img {
   max-width: 100%;

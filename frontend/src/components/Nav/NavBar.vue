@@ -1,7 +1,7 @@
 <template>
   <nav class="nav-extended">
     <div class="nav-wrapper">
-      <router-link to="/" class="brand-logo">Nyhetsmurveln</router-link>
+      <router-link to="/" class="brand-logo headline">Nyhetsmurveln</router-link>
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li><router-link to="/about">Om Sidan</router-link></li>

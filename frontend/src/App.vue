@@ -1,6 +1,23 @@
 <template>
   <div v-if="feedLoading">
-    <h1 class="center-align">LADDAR NYHETER...</h1>
+    <div class="row">
+      <h1 class="center-align">LADDAR NYHETER...</h1>
+    </div>
+    <div class="row">
+      <div class="center-align">
+        <div class="preloader-wrapper active">
+        <div class="spinner-layer spinner-red-only">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div><div class="gap-patch">
+            <div class="circle"></div>
+          </div><div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+    </div>
+    </div>
+  </div>
   </div>
   <div id="main-app" v-else>
     <NavBar/>
@@ -54,23 +71,15 @@ export default {
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+html {
+  font-size: 14px;
+  body {
+    font-family: 'Source Code Pro', monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    .headline {
+      padding-left: 2rem;
+      font-family: 'Indie Flower', cursive;
     }
   }
 }

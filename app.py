@@ -28,7 +28,9 @@ jwt = JWTManager(app)
 
 app.config['MONGODB_SETTINGS'] = {
     "db": "nyhetsmurveln",
-    "host": os.environ["MONGO_URI"]
+    "host": os.environ["MONGO_URI"],
+    # Required for deployment, or there's a connection error due to PyMongo 3
+    "connect": False
 }
 
 db = MongoEngine(app)
@@ -55,12 +57,19 @@ def login():
         email = request.json["email"]
         password = request.json["password"]
 
-        user = User.objects.get(email=email)
+        user = User.objects().get_or_404(email=email)
+
         access_token = create_access_token(user)
         refresh_token = create_refresh_token(user)
+        # Returned to the client, so removing unneccesary info like password hash, ID etc
+        sanitized_user = {
+            "email": user.email,
+            "isAdmin": user.isAdmin,
+            "subscriptions": user.subscriptions
+        }
 
         if check_password_hash(user.password, password):
-            return jsonify(token=access_token, refreshToken=refresh_token, user=user.to_json())
+            return jsonify(token=access_token, refreshToken=refresh_token, user=sanitized_user)
         else:
             return jsonify({
                 "status": 401,
@@ -96,7 +105,7 @@ def api_parser(feed_id):
     # Instead, we accept document-IDs as a URL parameter and get the URL from Mongo.
 
     try:
-        url = json.loads(Feed.objects.get_or_404(id=feed_id).to_json())["url"]
+        url = json.loads(Feed.objects().get_or_404(id=feed_id).to_json())["url"]
         feed = feedparser.parse(url)
         if len(feed.entries) > 0:
             return jsonify({

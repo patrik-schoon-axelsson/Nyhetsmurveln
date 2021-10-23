@@ -1,0 +1,7 @@
+// Overrides variables, imports fonts, etc
+
+$primary-color: #000;
+$secondary-color: #454545;
+
+@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&family=Source+Code+Pro:ital,wght@0,500;1,500&display=swap');
+@import "../../../node_modules/materialize-css/sass/materialize.scss"
