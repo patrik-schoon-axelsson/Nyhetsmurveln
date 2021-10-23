@@ -10,7 +10,8 @@ from flask_mongoengine import MongoEngine
 from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, JWTManager
 import feedparser
 
-load_dotenv()
+if os.path.exists("./.env"):
+    load_dotenv()
 
 app = Flask(__name__, 
             static_folder='frontend/dist/', 
