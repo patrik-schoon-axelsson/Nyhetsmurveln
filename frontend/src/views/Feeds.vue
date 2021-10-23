@@ -6,7 +6,7 @@
      <h1 v-if="error">{{error}}</h1>
      <hr>
     <div class="col s12 m7 offset-m3" v-if="feed">
-    <div class="card small">
+    <div class="card small z-depth-4">
       <div class="card-stacked">
         <div class="card-content">
         <h4 class="header headline">{{feed.title}}</h4>

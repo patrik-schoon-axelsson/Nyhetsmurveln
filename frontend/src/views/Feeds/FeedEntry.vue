@@ -1,7 +1,7 @@
 <template>
-  <div class="col s12 m6 l4">
-      <div class="card blue-grey darken-1">
-        <div class="card-content white-text">
+  <div class="col s12 m6 l4"> 
+      <div class="card z-depth-4">
+        <div class="card-content">
           <span class="card-title">{{entry.title}}</span>
           <p v-html="entry.summary"></p>
         </div>
@@ -20,7 +20,7 @@ export default {
 
 <style>
 .card-title {
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 p {
   font-size: .8rem;

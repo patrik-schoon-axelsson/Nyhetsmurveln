@@ -24,5 +24,6 @@ pnpm-debug.log*
 
 *.env
 
+*/dist
 /env
 /__pycache__
